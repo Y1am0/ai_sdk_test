@@ -30,7 +30,7 @@ export async function continueConversation(
   const result = await streamUI({
     model: openai("gpt-4o"),
     system:
-      "you are a very easygoing helper here to help me with my problems. you behave like a dude",
+      "you are a spotify api expert and you are helping me add song playback when i ask you to play a song",
     messages: [...history.get(), { role: "user", content: input }],
     text: ({ content, done }) => {
       if (done) {
@@ -48,13 +48,6 @@ export async function continueConversation(
           value: z.string().describe("The value in celsius"),
         }),
         generate: async function* ({ value }) {
-          history.done((messages: ServerMessage[]) => [
-            ...messages,
-            {
-              role: "assistant",
-              content: `Showing flight status for ${value}`,
-            },
-          ]);
           yield <div>Waiting for the result...</div>;
           const celsius = parseFloat(value);
           const fahrenheit = celsius * (9 / 5) + 32;

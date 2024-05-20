@@ -11,42 +11,40 @@ export default function Home() {
   const { continueConversation } = useActions();
 
   return (
-    <div>
+    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
       <div>
         {conversation.map((message: ClientMessage) => (
-          <div key={message.id}>
+          <div key={message.id} className="whitespace-pre-wrap">
             {message.role}: {message.display}
           </div>
         ))}
       </div>
 
-      <div>
+      <form
+        action={async () => {
+          setInput("");
+          setConversation((currentConversation: ClientMessage[]) => [
+            ...currentConversation,
+            { id: nanoid(), role: "user", display: input },
+          ]);
+
+          const message = await continueConversation(input);
+
+          setConversation((currentConversation: ClientMessage[]) => [
+            ...currentConversation,
+            message,
+          ]);
+        }}
+      >
         <input
-          className="text-black"
+          className="text-black fixed bottom-0 w-full max-w-md p-2 mb-8 border border-gray-300 rounded shadow-xl"
           type="text"
           value={input}
           onChange={(event) => {
             setInput(event.target.value);
           }}
         />
-        <button
-          onClick={async () => {
-            setConversation((currentConversation: ClientMessage[]) => [
-              ...currentConversation,
-              { id: nanoid(), role: "user", display: input },
-            ]);
-
-            const message = await continueConversation(input);
-
-            setConversation((currentConversation: ClientMessage[]) => [
-              ...currentConversation,
-              message,
-            ]);
-          }}
-        >
-          Send Message
-        </button>
-      </div>
+      </form>
     </div>
   );
 }
