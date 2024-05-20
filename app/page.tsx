@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { ClientMessage } from "@/app/actions";
 import { useActions, useUIState } from "ai/rsc";
-import { nanoid } from "nanoid";
 
 export default function Home() {
   const [input, setInput] = useState<string>("");
@@ -23,10 +22,6 @@ export default function Home() {
       <form
         action={async () => {
           setInput("");
-          setConversation((currentConversation: ClientMessage[]) => [
-            ...currentConversation,
-            { id: nanoid(), role: "user", display: input },
-          ]);
 
           const message = await continueConversation(input);
 
